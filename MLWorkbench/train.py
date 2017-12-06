@@ -74,5 +74,5 @@ def train(model, train_ds, target_view, test_ds, **kwa):
 
                 if loss_fn is not None:
                     print("    OOF Train Loss:",
-                          loss_fn(fold_eval_y, train_p[fold_eval_idx, split, bag]))
+                          eval_fn(fold_eval_y, train_p[fold_eval_idx, split, bag]))
     return train_p, test_p
