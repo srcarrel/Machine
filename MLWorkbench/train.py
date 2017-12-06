@@ -72,5 +72,5 @@ def train(model, train_ds, target_view, test_ds, **kwa):
                 test_p[:, split, fold, bag] = model.predict(test_x)
 
                 print("    OOF Train Loss:",
-                      model.loss(fold_train_y, train_p[fold_eval_idx, split, bag]))
+                      model.loss(fold_eval_y, train_p[fold_eval_idx, split, bag]))
     return train_p, test_p
