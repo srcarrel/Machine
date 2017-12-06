@@ -14,8 +14,7 @@ class Xgb(Model):
     The XGBoost Model.
     """
 
-    def __init__(self, params, loss, n_iter=400):
-        super().__init__(loss)
+    def __init__(self, params, n_iter=400):
         self.params = params
         self.n_iter = n_iter
         self.model = None

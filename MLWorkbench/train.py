@@ -34,6 +34,7 @@ def train(model, train_ds, target_view, test_ds, **kwa):
     n_splits = kwa.get('n_splits', 1)
     n_folds = kwa.get('n_folds', 5)
     n_bags = kwa.get('n_bags', 1)
+    eval_fn = kwa.get('eval_fn', None)
 
     train_x = train_ds.get_values()
     train_y = target_view.view_data
@@ -71,6 +72,7 @@ def train(model, train_ds, target_view, test_ds, **kwa):
 
                 test_p[:, split, fold, bag] = model.predict(test_x)
 
-                print("    OOF Train Loss:",
-                      model.loss(fold_eval_y, train_p[fold_eval_idx, split, bag]))
+                if loss_fn is not None:
+                    print("    OOF Train Loss:",
+                          loss_fn(fold_eval_y, train_p[fold_eval_idx, split, bag]))
     return train_p, test_p
