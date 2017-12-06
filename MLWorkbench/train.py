@@ -6,8 +6,8 @@ import numpy as np
 
 from sklearn.model_selection import StratifiedKFold
 
-from dataset import View, Dataset
-from model import Model
+from MLWorkbench.dataset import View, Dataset
+from MLWorkbench.model import Model
 
 def train(model, train_ds, target_view, test_ds, **kwa):
     """
@@ -44,13 +44,13 @@ def train(model, train_ds, target_view, test_ds, **kwa):
 
     for split in range(n_splits):
         print()
-        print("Training split %d..." % split)
+        print("Training split %d of %d..." % (split + 1, n_splits))
 
         k_fold = StratifiedKFold(n_folds, shuffle=True)
 
         for fold, (fold_train_idx, fold_eval_idx) in enumerate(k_fold.split(train_x, train_y)):
             print()
-            print("  Fold %d..." % fold)
+            print("  Fold %d of %d..." % (fold + 1, n_folds))
 
             fold_train_x = train_x[fold_train_idx]
             fold_train_y = train_y[fold_train_idx]
@@ -59,16 +59,18 @@ def train(model, train_ds, target_view, test_ds, **kwa):
             fold_eval_y = train_y[fold_eval_idx]
 
             for bag in range(n_bags):
-                print("    Training model %d..." % bag)
+                print("    Training model %d of %d..." % (bag + 1, n_bags))
 
-                model.fit(train=(fold_train_x, fold_train_y),
-                          val=(fold_eval_x, fold_eval_y),
-                          feature_names=train_x.get_feature_names())
+                model.fit(train_x=fold_train_x,
+                          train_y=fold_train_y,
+                          valid_x=fold_eval_x,
+                          valid_y=fold_eval_y,
+                          feature_names=train_ds.get_feature_names())
 
                 train_p[fold_eval_idx, split, bag] = model.predict(fold_eval_x)
 
                 test_p[:, split, fold, bag] = model.predict(test_x)
 
                 print("    OOF Train Loss:",
-                      model.loss(train_p[fold_eval_idx, split, bag], fold_train_y))
+                      model.loss(fold_train_y, train_p[fold_eval_idx, split, bag]))
     return train_p, test_p

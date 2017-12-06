@@ -29,8 +29,8 @@ class Model(ABC):
         """
         pass
 
-    def loss(self, y_pred, y_true):
+    def loss(self, y_true, y_pred):
         """
         Return the calculated loss.
         """
-        return self.loss_fn(y_pred, y_true)
+        return self.loss_fn(y_true, y_pred)

@@ -6,7 +6,8 @@ Objects:
 """
 
 import xgboost as xgb
-from model import Model
+
+from MLWorkbench.model import Model
 
 class Xgb(Model):
     """

@@ -86,7 +86,7 @@ class Dataset(object):
     The Dataset object represents a single named dataset with multiple views into it.
     """
 
-    def __init__(self, ds_name, **views):
+    def __init__(self, ds_name, *views):
         """
         Construct a Dataset object from a collection of views into named dataset.
 
@@ -125,8 +125,7 @@ class Dataset(object):
             ds_name (str): The name of the dataset to load.
             views (list of str): The list of named views to load from the cache directory.
         """
-        return cls(ds_name,
-                   **{view_name: View.from_cache(ds_name, view_name) for view_name in views})
+        return cls(ds_name, *[View.from_cache(ds_name, view_name) for view_name in views])
 
     def get_values(self):
         """
@@ -139,4 +138,4 @@ class Dataset(object):
         """
         Return the combined list of feature names of the views into this dataset.
         """
-        return [view.feature_names for view in self.views]
+        return [feature_name for view in self.views for feature_name in view.feature_names]
