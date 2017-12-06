@@ -12,16 +12,25 @@ class Model(ABC):
     The Model represents a simple interface for general machine learning algorithsm.
     """
 
+    def __init__(self, loss):
+        self.loss_fn = loss
+
     @abstractmethod
-    def fit(self, x_train, y_train, x_eval=None, y_eval=None, **kwa):
+    def fit(self, train_x, train_y, valid_x=None, valid_y=None, **kwa):
         """
         Fit the model to the data provided, using the validation set if present.
         """
         pass
 
     @abstractmethod
-    def predict(self, x_val):
+    def predict(self, data):
         """
         Create a prediction using the model.
         """
         pass
+
+    def loss(self, y_pred, y_true):
+        """
+        Return the calculated loss.
+        """
+        return self.loss_fn(y_pred, y_true)
